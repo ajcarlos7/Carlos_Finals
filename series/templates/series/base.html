@@ -1,0 +1,169 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}GLflix{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'series/css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'series/css/styles.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="nav-left">
+        <a href="{% url 'home' %}" class="logo"><h1>GL<span>flix</span></h1></a>
+    </div>
+
+    <div class="nav-center">
+        <a href="{% url 'home' %}" 
+           class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}">
+            All
+        </a>
+    
+        <a href="{% url 'genre_detail' 'comedy' %}" 
+           class="nav-link {% if genre == 'comedy' %}active{% endif %}">
+            Comedy
+        </a>
+    
+        <a href="{% url 'genre_detail' 'romance' %}" 
+           class="nav-link {% if genre == 'romance' %}active{% endif %}">
+            Romance
+        </a>
+    
+        <a href="{% url 'genre_detail' 'drama' %}" 
+           class="nav-link {% if genre == 'drama' %}active{% endif %}">
+            Drama
+        </a>
+    
+        <a href="{% url 'genre_detail' 'mystery' %}" 
+           class="nav-link {% if genre == 'mystery' %}active{% endif %}">
+            Mystery
+        </a>
+    
+        <a href="{% url 'genre_detail' 'fantasy' %}"
+        class="nav-link {% if genre == 'fantasy' %}active{% endif %}">
+         Fantasy
+     </a>
+    </div>
+    
+    <div class="nav-right">
+        <form method="get" action="{% url 'home' %}" class="search-form">
+            <input
+                type="text"
+                name="q"
+                placeholder="Search..."
+                class="search-input"
+            >
+        </form>
+    
+        {% if user.is_authenticated %}
+            <span class="profile-link">
+                <a href="{% url 'user_profile' user.username %}">{{ user.username }}</a>
+            </span>
+            <form method="POST" action="{% url 'logout' %}" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="logout-btn">Log Out</button>
+            </form>
+        {% else %}
+            <button type="button" id="signup-btn" class="signup-btn">Log In / Sign Up</button>
+        {% endif %}
+    </div>
+    
+</nav>
+{% block content %}{% endblock %}
+
+<!-- AUTH POPUP -->
+<div id="popup" class="popup">
+    <div class="popup-content">
+        <span class="close-btn">&times;</span>
+
+        <!-- LOGIN FORM -->
+        <form method="POST" action="{% url 'login' %}" class="form" id="login-form">
+            {% csrf_token %}
+            <h2>Log In</h2>
+            <div class="form-element">
+                <label>Email / Username</label>
+                <input type="text" name="username" required>
+            </div>
+            <div class="form-element">
+                <label>Password</label>
+                <input type="password" name="password" required>
+            </div>
+            <div class="form-element">
+                <button type="submit">Log In</button>
+            </div>
+            <div class="switch">
+                <p>Don't have an account? <a href="#" id="show-signup">Create one</a></p>
+            </div>
+        </form>
+
+        <!-- SIGNUP FORM -->
+        <form method="POST" action="{% url 'signup' %}" id="signup-form" style="display: none;">
+            {% csrf_token %}
+            <h2>Sign Up</h2>
+            <div class="form-element">
+                <label>Username</label>
+                <input type="text" name="username" required>
+            </div>
+            <div class="form-element">
+                <label>Email</label>
+                <input type="email" name="email" required>
+            </div>
+            <div class="form-element">
+                <label>Password</label>
+                <input type="password" name="password1" required>
+            </div>
+            <div class="form-element">
+                <label>Confirm Password</label>
+                <input type="password" name="password2" required>
+            </div>
+            <div class="form-element">
+                <button type="submit">Sign Up</button>
+            </div>
+            <div class="switch">
+                <p>Already have an account? <a href="#" id="show-login">Log in</a></p>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    const popup = document.getElementById('popup');
+    const openBtn = document.getElementById('signup-btn');
+    const closeBtn = document.querySelector('.close-btn');
+
+    const loginForm = document.getElementById('login-form');
+    const signupForm = document.getElementById('signup-form');
+
+    const showSignup = document.getElementById('show-signup');
+    const showLogin = document.getElementById('show-login');
+
+    // Open popup
+    if (openBtn) {
+        openBtn.addEventListener('click', () => popup.style.display = 'block');
+    }
+
+    // Close popup
+    closeBtn.addEventListener('click', () => popup.style.display = 'none');
+    window.addEventListener('click', e => {
+        if (e.target === popup) popup.style.display = 'none';
+    });
+
+    // Switch forms
+    showSignup.addEventListener('click', e => {
+        e.preventDefault();
+        loginForm.style.display = 'none';
+        signupForm.style.display = 'block';
+    });
+    showLogin.addEventListener('click', e => {
+        e.preventDefault();
+        signupForm.style.display = 'none';
+        loginForm.style.display = 'block';
+    });
+
+    
+</script>
+
+</body>
+</html>

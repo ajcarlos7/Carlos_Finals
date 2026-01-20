@@ -1,0 +1,81 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: sans-serif;
+}
+
+.popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 450px;
+    padding: 25px 35px;
+    background: #fff;
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    border-radius: 12px;
+    transform: translate(-50%, -50%) scale(0.7);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 250ms ease, transform 250ms ease;
+}
+
+.popup.active {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+    pointer-events: all;
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    font-size: 20px;
+    background: #888;
+    padding: 2px 8px;
+    color: white;
+    border-radius: 50%;
+}
+
+.form h2 {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.form-element {
+    margin: 15px 0;
+}
+
+.form-element label {
+    font-size: 14px;
+}
+
+.form-element input {
+    margin-top: 5px;
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #aaa;
+    border-radius: 5px;
+}
+
+.form-element button {
+    width: 100%;
+    padding: 10px;
+    background: #222;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.switch {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.switch a {
+    color: #1a79ca;
+    font-weight: 600;
+    text-decoration: none;
+}

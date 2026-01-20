@@ -1,0 +1,80 @@
+{% extends "series/base.html" %}
+{% load static %}
+
+{% block title %}
+{{ series.title }} | GLflix
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'series/css/series_info.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="series-hero">
+
+    
+    <div class="hero-left">
+        {% if series.image %}
+            <img src="{{ series.image.url }}" alt="{{ series.title }}">
+        {% else %}
+            <img src="{% static 'series/images/placeholder.png' %}" alt="No image">
+        {% endif %}
+
+        <div class="hero-buttons">
+            {% if first_platform %}
+            <a href="{{ first_platform.url }}" target="_blank" class="btn-watch">
+                Watch now
+            </a>
+        {% else %}
+            <button class="btn-watch" disabled>
+                No link available
+            </button>
+        {% endif %}
+            <form method="POST" action="{% url 'add_favorite' series.id %}">
+                {% csrf_token %}
+                <button type="submit" class="btn-fav">
+                    Add favorites
+                </button>
+            </form>
+        </div>
+    </div>
+
+    
+    <div class="hero-right">
+
+        <h1 class="hero-title">{{ series.title }}</h1>
+
+        <p class="hero-desc">
+            {{ series.short_summary }}
+        </p>
+
+        
+        
+        <div class="info-block">
+            <p><strong>Genre:</strong> {{ series.genre }}</p>
+            <p><span>Country:</span> {{ series.country }}</p>
+            <p><span>Released date:</span> {{ series.release_date|date:"Y" }}</p>
+            <p><span>Episode:</span> {{ series.episodes }}</p>
+
+            <p>
+                <span>Main Cast:</span>
+                {% for cast in series.main_cast.all %}
+                    {{ cast.name }}{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+            </p>
+
+            {% if series.production_company %}
+                <p><span>Production Company:</span> {{ series.production_company.name }}</p>
+            {% endif %}
+
+            <p>
+                <span>Streaming:</span>
+                {% for platform in series.streaming.all %}
+                    {{ platform.platform }}{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+            </p>
+        </div>
+
+    </div>
+</section>
+{% endblock %}

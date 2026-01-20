@@ -1,0 +1,49 @@
+{% extends "series/base.html" %}
+{% load static %}
+
+{% block title %}
+{{ genre|title }} | GLflix
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'series/css/genre.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
+>
+{% endblock %}
+
+{% block content %}
+<section class="genre-section">
+    <h2>{{ genre|title }}</h2>
+
+    <div class="box">
+        {% for series in series_list %}
+            <a href="{% url 'series-info' series.id %}" class="card">
+
+                {% if series.image %}
+                    <img src="{{ series.image.url }}" alt="{{ series.title }}">
+                {% else %}
+                    <img src="{% static 'series/images/placeholder.png' %}" alt="No image available">
+                {% endif %}
+
+                <div class="details">
+                    <div class="left">
+                        <p class="name">{{ series.title }}</p>
+
+                        <div class="date_quality">
+                            <p class="quality">HD</p>
+                            <p class="date">
+                                {{ series.release_date|date:"Y" }}
+                            </p>
+                        </div>
+
+                        <p class="category">{{ series.genre }}</p>
+                    </div>
+                </div>
+
+            </a>
+        {% empty %}
+            <p>No series found for this genre.</p>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

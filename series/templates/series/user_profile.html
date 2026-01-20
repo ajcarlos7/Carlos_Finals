@@ -1,0 +1,41 @@
+{% extends "series/base.html" %}
+{% load static %}
+
+{% block title %}
+{{ profile_user.username }}'s Profile | GLflix
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'series/css/user_profile.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="profile-container">
+    <h1>{{ profile_user.username }}'s Favorites</h1>
+
+    {% if favorites %}
+        <div class="favorites-grid">
+            {% for series in favorites %}
+                <div class="favorite-card">
+                    <a href="{% url 'series-info' series.id %}">
+                        {% if series.image %}
+                            <img src="{{ series.image.url }}" alt="{{ series.title }}">
+                        {% endif %}
+                        <h3>{{ series.title }}</h3>
+                    </a>
+
+                    {% if request.user == profile_user %}
+                        <form method="POST" action="{% url 'remove_favorite' series.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="remove-btn">Remove</button>
+                        </form>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No favorites yet. Browse <a href="{% url 'home' %}">series</a> to add!</p>
+    {% endif %}
+</div>
+{% endblock %}
+    
